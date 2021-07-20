@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        <title>Quantum Portfolio</title>
+    </head>
+    <body class="container-md bg-dark">
+        <nav id="navbar" class="mb-3 mt-3">
+            <ul class="nav nav-tabs justify-content-center gap-2 text-center">
+                <li class="nav-item flex-fill">
+                    <a href="#" class="nav-link active text-dark" aria-current="page">Home</a>
+                </li>
+                <li class="nav-item flex-fill">
+                    <a href="/pricing" class="nav-link text-light">Pricing</a>
+                </li>
+                <li class="nav-item flex-fill">
+                    <a href="/portfolio" class="nav-link text-light">Portfolio</a>
+                </li>
+                <li class="nav-item dropdown flex-fill">
+                    <a href="#" class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                        Account
+                    </a>
+                    <ul class="dropdown-menu text-center">
+                        {% if 'user_id' not in session or session['user_id'] == None %}
+                        <li><a href="/signup" class="dropdown-item text-dark">Sign up</a></li>
+                        <li><a href="/login" class="dropdown-item text-dark">Log in</a></li>
+                        {% else %}
+                        <li><a href="/account" class="dropdown-item text-dark">View Account</a></li>
+                        <li><a href="/logout" class="dropdown-item text-dark">Log out</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                <li class="nav-item flex-fill">
+                    <a href="/about" class="nav-link text-light">About</a>
+                </li>
+            </ul>
+        </nav>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>
