@@ -31,3 +31,7 @@ def login():
 def logout():
     session.pop('user_id', None)
     return redirect('/')
+
+@app.route('/about')
+def about():
+    return render_template('about.html', session=session)
