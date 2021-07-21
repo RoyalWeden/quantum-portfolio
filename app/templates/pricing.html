@@ -7,16 +7,16 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
 
-        <title>Quantum Portfolio</title>
+        <title>Pricing | Quantum Portfolio</title>
     </head>
     <body class="container-md bg-dark">
         <nav id="navbar" class="mb-3 mt-3">
             <ul class="nav nav-tabs justify-content-center gap-2 text-center">
                 <li class="nav-item flex-fill">
-                    <a href="{{url_for('home')}}" class="nav-link active text-dark" aria-current="page">Home</a>
+                    <a href="{{url_for('home')}}" class="nav-link text-light">Home</a>
                 </li>
                 <li class="nav-item flex-fill">
-                    <a href="{{url_for('pricing')}}" class="nav-link text-light">Pricing</a>
+                    <a href="{{url_for('pricing')}}" class="nav-link active text-dark" aria-current="page">Pricing</a>
                 </li>
                 <li class="nav-item flex-fill">
                     <a href="{{url_for('portfolio')}}" class="nav-link text-light">Portfolio</a>

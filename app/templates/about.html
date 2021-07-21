@@ -13,13 +13,13 @@
         <nav id="navbar" class="mb-3 mt-3">
             <ul class="nav nav-tabs justify-content-center gap-2 text-center">
                 <li class="nav-item flex-fill">
-                    <a href="/home" class="nav-link text-light">Home</a>
+                    <a href="{{url_for('home')}}" class="nav-link text-light">Home</a>
                 </li>
                 <li class="nav-item flex-fill">
-                    <a href="/pricing" class="nav-link text-light">Pricing</a>
+                    <a href="{{url_for('pricing')}}" class="nav-link text-light">Pricing</a>
                 </li>
                 <li class="nav-item flex-fill">
-                    <a href="/portfolio" class="nav-link text-light">Portfolio</a>
+                    <a href="{{url_for('portfolio')}}" class="nav-link text-light">Portfolio</a>
                 </li>
                 <li class="nav-item dropdown flex-fill">
                     <a href="#" class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown" role="button" aria-expanded="false">
@@ -27,11 +27,11 @@
                     </a>
                     <ul class="dropdown-menu text-center">
                         {% if 'user_id' not in session or session['user_id'] == None %}
-                        <li><a href="/signup" class="dropdown-item text-dark">Sign up</a></li>
-                        <li><a href="/login" class="dropdown-item text-dark">Log in</a></li>
+                        <li><a href="{{url_for('signup')}}" class="dropdown-item text-dark">Sign up</a></li>
+                        <li><a href="{{url_for('login')}}" class="dropdown-item text-dark">Log in</a></li>
                         {% else %}
-                        <li><a href="/account" class="dropdown-item text-dark">View Account</a></li>
-                        <li><a href="/logout" class="dropdown-item text-dark">Log out</a></li>
+                        <li><a href="{{url_for('account')}}" class="dropdown-item text-dark">View Account</a></li>
+                        <li><a href="{{url_for('logout')}}" class="dropdown-item text-dark">Log out</a></li>
                         {% endif %}
                     </ul>
                 </li>
@@ -42,19 +42,19 @@
         </nav>
     
         <!-- Add space -->
-        <div class="mb-5"></div>
+        <div class="mb-4"></div>
 
-        <div class="container text-light mb-3">
+        <div class="container-md text-light mb-3">
             <h1>Quantum Portfolio</h1>
-            <p>
+            <p class="mb-5">
                 Many people are interested in stocks and trading all around the world like myself. I wanted to create a simple way for people to be able to manage a portfolio for stocks that they want while also gaining the largest profit.
             </p>
             <h2>Why Quantum?</h2>
-            <p>
+            <p class="mb-5">
                 Through the latest research in quantum computing, researchers have been trying to find areas where there are possible advantages from quantum computing versus classical computing. I believe that as more research is done, better and faster algorithms in quantum will be able to leverage a wide range of financial applications, such as portfolio optimization in this project.
             </p>
             <h2>How to use this</h2>
-            <p>
+            <p class="mb-5">
                 To start your own quantum portfolio, simply sign up and account, select the stocks you would like your portfolio to optimize to, and wait for your quantum portfolio to be generated. Based on your subscription plan, you can choose from a wider range of stocks, have more portfolios generated, and have your portfolio be updated more regularly.
             </p>
         </div>

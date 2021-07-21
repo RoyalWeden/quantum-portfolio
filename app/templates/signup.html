@@ -6,6 +6,7 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
+        <script src="{{url_for('static', filename='js/signup.js')}}"></script>
 
         <title>Sign up | Quantum Portfolio</title>
     </head>
@@ -14,13 +15,13 @@
         <nav id="navbar" class="mb-3 mt-3">
             <ul class="nav nav-tabs justify-content-center gap-2 text-center">
                 <li class="nav-item flex-fill">
-                    <a href="/home" class="nav-link text-light">Home</a>
+                    <a href="{{url_for('home')}}" class="nav-link text-light">Home</a>
                 </li>
                 <li class="nav-item flex-fill">
-                    <a href="/pricing" class="nav-link text-light">Pricing</a>
+                    <a href="{{url_for('pricing')}}" class="nav-link text-light">Pricing</a>
                 </li>
                 <li class="nav-item flex-fill">
-                    <a href="/portfolio" class="nav-link text-light">Portfolio</a>
+                    <a href="{{url_for('portfolio')}}" class="nav-link text-light">Portfolio</a>
                 </li>
                 <li class="nav-item dropdown flex-fill">
                     <a href="#" class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown" role="button" aria-expanded="false">
@@ -28,16 +29,16 @@
                     </a>
                     <ul class="dropdown-menu text-center">
                         {% if 'user_id' not in session or session['user_id'] == None %}
-                        <li><a href="#" class="dropdown-item active text-light" aria-current="page">Sign up</a></li>
-                        <li><a href="/login" class="dropdown-item text-dark">Log in</a></li>
+                        <li><a href="{{url_for('signup')}}" class="dropdown-item active text-light" aria-current="page">Sign up</a></li>
+                        <li><a href="{{url_for('login')}}" class="dropdown-item text-dark">Log in</a></li>
                         {% else %}
-                        <li><a href="/account" class="dropdown-item text-dark">View Account</a></li>
-                        <li><a href="/logout" class="dropdown-item text-dark">Log out</a></li>
+                        <li><a href="{{url_for('account')}}" class="dropdown-item text-dark">View Account</a></li>
+                        <li><a href="{{url_for('logout')}}" class="dropdown-item text-dark">Log out</a></li>
                         {% endif %}
                     </ul>
                 </li>
                 <li class="nav-item flex-fill">
-                    <a href="/about" class="nav-link text-light">About</a>
+                    <a href="{{url_for('about')}}" class="nav-link text-light">About</a>
                 </li>
             </ul>
         </nav>
@@ -64,7 +65,7 @@
                         <label for="emailConfirmInput" class="col-form-label-lg">Confirm Email Address</label>
                     </div>
                     <div class="row">
-                        <input type="email" class="form-control-lg" id="emailConfirmInput" name="confirm_email" placeholder="name@email.com" required>
+                        <input type="email" class="form-control-lg" id="emailConfirmInput" name="confirm_email" placeholder="name@email.com" oninput="confirmSignIn()" required>
                     </div>
                 </div>
             </div>
@@ -82,7 +83,7 @@
                         <label for="passwordConfirmInput" class="col-form-label-lg">Confirm Password</label>
                     </div>
                     <div class="row">
-                        <input type="password" class="form-control-lg" id="passwordConfirmInput" name="password" placeholder="Password" required>
+                        <input type="password" class="form-control-lg" id="passwordConfirmInput" name="password" placeholder="Password" oninput="confirmSignIn()" required>
                     </div>
                 </div>
             </div>
@@ -93,7 +94,8 @@
                     </div>
                     <div class="row">
                         <select name="subscription" id="subscription" class="form-select-lg" aria-label="Subscription Type" required>
-                            <option value="basic">Basic</option>
+                            <option value="free" selected>Free</option>
+                            <option value="basic" disabled>Basic</option>
                             <option value="premium" disabled>Premium</option>
                             <option value="enterprise" disabled>Enterprise</option>
                         </select>
@@ -107,7 +109,7 @@
             </div>
             <div class="row row-cols-auto justify-content-md-center g-5 mb-2" style="padding: 15px 5px 0 5px;">
                 <div class="col">
-                    <a href="/login">Already signed up? Log in.</a>
+                    <a href="{{url_for('login')}}">Already signed up? Log in.</a>
                 </div>
             </div>
         </form>

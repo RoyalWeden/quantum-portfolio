@@ -1,10 +1,10 @@
+from flask.helpers import url_for
 from app import app
 from flask import render_template, redirect, session, request
 from app import mongodb
 
 @app.route('/')
-@app.route('/home')
-def index():
+def home():
     return render_template('index.html', session=session)
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -29,9 +29,27 @@ def login():
 
 @app.route('/logout')
 def logout():
+    if 'user_id' not in session or session['user_id'] == None:
+        return url_for('login')
     session.pop('user_id', None)
-    return redirect('/')
+    return redirect(url_for('home'))
 
 @app.route('/about')
 def about():
     return render_template('about.html', session=session)
+
+@app.route('/portfolio')
+def portfolio():
+    if 'user_id' not in session or session['user_id'] == None:
+        return redirect(url_for('login'))
+    return 'portfolio'
+
+@app.route('/account')
+def account():
+    if 'user_id' not in session or session['user_id'] == None:
+        return redirect(url_for('login'))
+    return 'account'
+
+@app.route('/pricing')
+def pricing():
+    return render_template('pricing.html', session=session)
