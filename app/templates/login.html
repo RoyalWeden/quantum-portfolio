@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
+
+        <title>Log in | Quantum Portfolio</title>
+    </head>
+    <body class="container-md bg-dark">
+        <!-- Start Navigation Bar -->
+        <nav id="navbar" class="mb-3 mt-3">
+            <ul class="nav nav-tabs justify-content-center gap-2 text-center">
+                <li class="nav-item flex-fill">
+                    <a href="/home" class="nav-link text-light">Home</a>
+                </li>
+                <li class="nav-item flex-fill">
+                    <a href="/pricing" class="nav-link text-light">Pricing</a>
+                </li>
+                <li class="nav-item flex-fill">
+                    <a href="/portfolio" class="nav-link text-light">Portfolio</a>
+                </li>
+                <li class="nav-item dropdown flex-fill">
+                    <a href="#" class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                        Account
+                    </a>
+                    <ul class="dropdown-menu text-center">
+                        {% if 'user_id' not in session or session['user_id'] == None %}
+                        <li><a href="/signup" class="dropdown-item text-dark">Sign up</a></li>
+                        <li><a href="/login" class="dropdown-item active text-light" aria-current="page">Log in</a></li>
+                        {% else %}
+                        <li><a href="/account" class="dropdown-item text-dark">View Account</a></li>
+                        <li><a href="/logout" class="dropdown-item text-dark">Log out</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                <li class="nav-item flex-fill">
+                    <a href="/about" class="nav-link text-light">About</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- End Navigation Bar -->
+    
+        <!-- Add space -->
+        <div class="mb-5"></div>
+
+        <!-- Start Sign up Form -->
+        <form class="container-xl text-light text-center rounded border border-5" method="POST" style="max-width: 65%;">
+            <!-- Add space -->
+            <div class="mb-3"></div>
+            <div class="row row-cols-auto justify-content-md-center g-5 mb-4" style="padding: 0 5px 0 5px;">
+                <div class="col">
+                    <div class="row justify-content-md-center">
+                        <label for="emailInput" class="col-form-label-lg">Email Address</label>
+                    </div>
+                    <div class="row">
+                        <input type="email" class="form-control-lg" id="emailInput" name="email" placeholder="name@email.com" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row row-cols-auto justify-content-md-center g-5 mb-4" style="padding: 0 5px 0 5px;">
+                <div class="col">
+                    <div class="row">
+                        <label for="passwordInput" class="col-form-label-lg">Password</label>
+                    </div>
+                    <div class="row">
+                        <input type="password" class="form-control-lg" id="passwordInput" name="password" placeholder="Password" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row row-cols-auto justify-content-md-center g-5 mb-3" style="padding: 0 5px 0 5px;">
+                <div class="col">
+                    <button class="btn btn-light btn-lg" type="submit">Log in</button>
+                </div>
+            </div>
+            <div class="row row-cols-auto justify-content-md-center g-5 mb-2" style="padding: 15px 5px 0 5px;">
+                <div class="col">
+                    <a href="/signup">Not signed up? Sign up.</a>
+                </div>
+            </div>
+        </form>
+        <!-- End Sign up Form -->
+
+        <!-- Add space -->
+        <div class="mb-5"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>

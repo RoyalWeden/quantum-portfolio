@@ -3,18 +3,19 @@ from flask import render_template, redirect, session, request
 from app import mongodb
 
 @app.route('/')
+@app.route('/home')
 def index():
     return render_template('index.html', session=session)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        new_user = mongodb.add_user(request.form['email'], request.form['password'])
+        new_user = mongodb.add_user(request.form['email'], request.form['password'], request.form['subscription'])
         if new_user != None:
             session['user_id'] = new_user
             return redirect('/')
         return 'sign up error'
-    return 'sign up'
+    return render_template('signup.html', session=session)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -24,7 +25,7 @@ def login():
             session['user_id'] = found_user
             return redirect('/')
         return 'log in error'
-    return 'log in'
+    return render_template('login.html', session=session)
 
 @app.route('/logout')
 def logout():
