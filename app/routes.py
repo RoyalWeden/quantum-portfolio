@@ -2,10 +2,25 @@ from flask.helpers import url_for
 from app import app
 from flask import render_template, redirect, session, request
 from app import mongodb
+from app import stocks
 
-@app.route('/')
+test_stocks = {
+    'Ticker': ['AAPL', 'AMZN'],
+    'Open': [99.26, 747.79],
+    'High': [99.30, 751.28],
+    'Low': [98.31, 743.53],
+    'Close': [98.66, 744.86],
+    'Volume': [28313669.0, 2277711.0],
+    'Date': ['2016-07-22', '2016-07-22']
+}
+
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('index.html', session=session)
+    if request.method == 'POST':
+        shown_stocks = stocks.get_home_stocks(request.form['stock_search'].upper())
+    else:
+        shown_stocks = stocks.get_home_stocks()
+    return render_template('index.html', session=session, stocks=shown_stocks, stocks_len=len(shown_stocks['Ticker']))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():

@@ -44,6 +44,88 @@
         <!-- Add space -->
         <div class="mb-5"></div>
 
+        <div class="container justify-content-center mb-5 bg-dark">
+            <form class="input-group" method="POST">
+                <span class="input-group-text bg-dark text-light">
+                    Stock Search
+                </span>
+                <input type="search" aria-label="Stock Search" class="form-control" name="stock_search" id="stock_search" placeholder="Stock" required>
+                <button class="btn btn-dark btn-outline-light" type="submit" id="search_button">Search</button>
+            </form>
+        </div>
+        
+        <!-- Start Stock Prices -->
+        <div class="row rows-cols-auto justify-content-center text-center gap-2 mb-5">
+            {% for i in range(stocks_len) %}
+            <div class="col mb-4" style="min-width: 15rem; max-width: 20rem;">
+                <div class="card bg-dark text-light border-light">
+                    <h4 class="card-header card-title">
+                        {{ stocks['Ticker'][i] }}
+                    </h4>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item bg-dark text-light">
+                            <div class="row">
+                                <div class="col">
+                                    <b>Open:</b>
+                                </div>
+                                <div class="col">
+                                    {{ stocks['Open'][i] }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item bg-dark text-light">
+                            <div class="row">
+                                <div class="col">
+                                    <b>High:</b>
+                                </div>
+                                <div class="col">
+                                    {{ stocks['High'][i] }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item bg-dark text-light">
+                            <div class="row">
+                                <div class="col">
+                                    <b>Low:</b>
+                                </div>
+                                <div class="col">
+                                    {{ stocks['Low'][i] }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item bg-dark text-light">
+                            <div class="row">
+                                <div class="col">
+                                    <b>Close:</b>
+                                </div>
+                                <div class="col">
+                                    {{ stocks['Close'][i] }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item bg-dark text-light">
+                            <div class="row">
+                                <div class="col">
+                                    <b>Volume:</b>
+                                </div>
+                                <div class="col">
+                                    {{ stocks['Volume'][i] }}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <small class="card-footer text-muted">
+                        {{ stocks['Date'][i] }}
+                    </small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- End Stock Prices -->
+
+        <!-- Add space -->
+        <div class="mb-5"></div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     </body>
 </html>
