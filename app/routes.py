@@ -24,22 +24,33 @@ def home():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    error = ''
     if request.method == 'POST':
-        new_user = mongodb.add_user(request.form['email'], request.form['password'], request.form['subscription'])
-        if new_user != None:
+        email = request.form['email']
+        password = request.form['password']
+        subscription = request.form['subscription']
+        if mongodb.check_user(email):
+            error = 'Please try a different email. This email is already in use.'
+            return render_template('signup.html', session=session, error=error)
+        else:
+            new_user = mongodb.add_user(email, password, subscription)
             session['user_id'] = new_user
             return redirect('/')
-        return 'sign up error'
     return render_template('signup.html', session=session)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    error = ''
     if request.method == 'POST':
-        found_user = mongodb.check_user(request.form['email'], request.form['password'])
-        if found_user != None:
+        email = request.form['email']
+        password = request.form['password']
+        found_user = mongodb.check_user(email, password)
+        if found_user:
             session['user_id'] = found_user
             return redirect('/')
-        return 'log in error'
+        else:
+            error = 'Email or password is incorrect. Please try again.'
+            return render_template('login.html', session=session, error=error)
     return render_template('login.html', session=session)
 
 @app.route('/logout')
