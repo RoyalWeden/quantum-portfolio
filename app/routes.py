@@ -1,8 +1,7 @@
-from flask.helpers import url_for
 from app import app
-from flask import render_template, redirect, session, request
-from app import mongodb
-from app import stocks
+from flask import render_template, redirect, session, request, url_for
+from app import mongodb, stocks
+from app.portfolio import portfolio_v1
 
 test_stocks = {
     'Ticker': ['AAPL', 'AMZN'],
@@ -64,8 +63,9 @@ def logout():
 def about():
     return render_template('about.html', session=session)
 
-@app.route('/portfolio')
+@app.route('/portfolio', methods=['GET'])
 def portfolio():
+    portfolio_v1.create_add_portfolio('verver')
     if 'user_id' not in session or session['user_id'] == None:
         return redirect(url_for('login'))
     return 'portfolio'

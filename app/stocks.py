@@ -5,6 +5,11 @@ import quandl
 from datetime import datetime, timezone, timedelta
 import random
 
+'''
+Quandl Documentation:
+https://docs.quandl.com/docs/python
+'''
+
 quandl.ApiConfig.api_key = config['QUANDL_API_TOKEN']
 
 tickers = pd.read_csv('data/wiki_tickers.csv')
