@@ -4,8 +4,14 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <link rel="apple-touch-icon" sizes="180x180" href="{{url_for('static', filename='favicon/apple-touch-icon.png')}}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{url_for('static', filename='favicon/favicon-32x32.png')}}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{url_for('static', filename='favicon/favicon-16x16.png')}}">
+        <link rel="manifest" href="{{url_for('static', filename='favicon/site.webmanifest')}}">
+
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/general.css')}}">
+        <script src="{{url_for('static', filename='js/update_account.js')}}"></script>
 
         <title>Quantum Portfolio</title>
     </head>
@@ -13,7 +19,7 @@
         <nav id="navbar" class="mb-3 mt-3">
             <ul class="nav nav-tabs justify-content-center gap-2 text-center">
                 <li class="nav-item flex-fill">
-                    <a href="{{url_for('home')}}" class="nav-link active text-dark" aria-current="page">Home</a>
+                    <a href="{{url_for('home')}}" class="nav-link text-light">Home</a>
                 </li>
                 <li class="nav-item flex-fill">
                     <a href="{{url_for('pricing')}}" class="nav-link text-light">Pricing</a>
@@ -30,7 +36,7 @@
                         <li><a href="{{url_for('signup')}}" class="dropdown-item text-dark">Sign up</a></li>
                         <li><a href="{{url_for('login')}}" class="dropdown-item text-dark">Log in</a></li>
                         {% else %}
-                        <li><a href="{{url_for('account')}}" class="dropdown-item text-dark">View Account</a></li>
+                        <li><a href="{{url_for('account')}}" class="dropdown-item active text-light" aria-current="page">View Account</a></li>
                         <li><a href="{{url_for('logout')}}" class="dropdown-item text-dark">Log out</a></li>
                         {% endif %}
                     </ul>
@@ -44,7 +50,138 @@
         <!-- Add space -->
         <div class="mb-5"></div>
 
-        
+        <div class="row">
+            <div class="col-3">
+                <ul class="nav flex-column gap-5" id="tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link btn-secondary text-light active" id="acc1-tab" data-bs-toggle="tab" data-bs-target="#acc1" type="button" role="tab" aria-controls="acc1" aria-selected="true">
+                            Edit Account
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link btn-secondary text-light" id="acc2-tab" data-bs-toggle="tab" data-bs-target="#acc2" type="button" role="tab" aria-controls="acc2" aria-selected="false">
+                            Portfolio Settings
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link btn-secondary text-light" id="acc3-tab" data-bs-toggle="tab" data-bs-target="#acc3" type="button" role="tab" aria-controls="acc3" aria-selected="false">
+                            Billing Details
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url_for('logout')}}" style="text-decoration: none;">
+                            <button class="nav-link btn-secondary text-light" id="logout-tab" data-bs-toggle="tab" data-bs-target="#logout" type="button" role="tab" aria-controls="logout" aria-selected="false">
+                                Log out
+                            </button>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link btn-secondary text-light" id="delete-acc-tab" data-bs-toggle="tab" data-bs-target="#delete-acc" type="button" role="tab" aria-controls="delete-acc" aria-selected="false">
+                            Delete Account
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="col justify-content-center text-center">
+                <div class="tab-content" id="tabsContent" style="margin-top: 1%;">
+                    <div class="tab-pane fade show active" id="acc1" role="tabpanel" aria-labelledby="acc1-tab">
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="emailInput" class="form-control bg-dark text-light">Email</label>
+                                <input type="email" name="emailInput" id="emailInput" class="form-control bg-dark text-light" value="{{email}}" placeholder="name@email.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="emailConfirmInput" class="form-control bg-dark text-light">Confirm Email</label>
+                                <input type="email" name="emailConfirmInput" id="emailConfirmInput" class="form-control bg-dark text-light" value="{{email}}" placeholder="name@email.com" oninput="confirmAccountUpdate()" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="passwordInput" class="form-control bg-dark text-light">Password</label>
+                                <input type="password" name="passwordInput" id="passwordInput" class="form-control bg-dark text-light" placeholder="Password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="passwordConfirmInput" class="form-control bg-dark text-light">Confirm Password</label>
+                                <input type="password" name="passwordConfirmInput" id="passwordConfirmInput" class="form-control bg-dark text-light" placeholder="Confirm Password" oninput="confirmAccountUpdate()" required>
+                            </div>
+                            <button class="btn btn-dark btn-outline-light" type="submit" name="account_button" value="update_account" id="update_account">Update</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="acc2" role="tabpanel" aria-labelledby="acc2-tab">
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="stockSelectionInput" class="form-control bg-dark text-light">Stocks (comma separated)</label>
+                                <input type="text" name="stockSelectionInput" id="stockSelectionInput" class="form-control bg-dark text-light" value="{{portfolio_settings['stocks']}}" placeholder="Stocks" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="generateRateInput" class="form-control bg-dark text-light">Portfolio Generate Rate</label>
+                                <select name="generateRateInput" id="generateRateInput" class="form-select bg-dark text-light" aria-label="Portfolio Generate Rate" required>
+                                    {% if portfolio_settings['auto_generate_rate'] == 'manual' %}
+                                    <option value="manual" selected>Manual</option>
+                                    {% else %}
+                                    <option value="manual">Manual</option>
+                                    {% endif %}
+                                    {% if portfolio_settings['auto_generate_rate'] == 'hourly' %}
+                                    <option value="hourly" selected>Monthly</option>
+                                    {% else %}
+                                    <option value="hourly">Monthly</option>
+                                    {% endif %}
+                                    {% if portfolio_settings['auto_generate_rate'] == 'daily' %}
+                                    <option value="daily" selected>Daily</option>
+                                    {% else %}
+                                    <option value="daily">Daily</option>
+                                    {% endif %}
+                                    {% if portfolio_settings['auto_generate_rate'] == 'monthly' %}
+                                    <option value="monthly" selected>Monthly</option>
+                                    {% else %}
+                                    <option value="monthly">Monthly</option>
+                                    {% endif %}
+                                    {% if portfolio_settings['auto_generate_rate'] == 'yearly' %}
+                                    <option value="yearly" selected>Yearly</option>
+                                    {% else %}
+                                    <option value="yearly">Yearly</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <button class="btn btn-dark btn-outline-light" type="submit" name="account_button" value="update_portfolio_settings" id="update_portfolio_settings">Update</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="acc3" role="tabpanel" aria-labelledby="acc3-tab">
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="billingCountryInput" class="form-control bg-dark text-light">Country</label>
+                                <input type="text" class="form-control bg-dark text-light" name="billingCountryInput" id="billingCountryInput" placeholder="Country" value="{{billing_info['country']}}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="billingStateInput" class="form-control bg-dark text-light">State/Province</label>
+                                <input type="text" class="form-control bg-dark text-light" name="billingStateInput" id="billingStateInput" placeholder="State/Province" value="{{billing_info['state']}}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="billingCityInput" class="form-control bg-dark text-light">City</label>
+                                <input type="text" class="form-control bg-dark text-light" name="billingCityInput" id="billingCityInput" placeholder="City" value="{{billing_info['city']}}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="billingAddressLine1Input" class="form-control bg-dark text-light">Address Line 1</label>
+                                <input type="text" class="form-control bg-dark text-light" name="billingAddressLine1Input" id="billingAddressLine1Input" placeholder="Address Line 1" value="{{billing_info['address1']}}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="billingAddressLine2Input" class="form-control bg-dark text-light">Address Line 2</label>
+                                <input type="text" class="form-control bg-dark text-light" name="billingAddressLine2Input" id="billingAddressLine2Input" placeholder="Address Line 2" value="{{billing_info['address2']}}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="billingZipcodeInput" class="form-control bg-dark text-light">Zipcode</label>
+                                <input type="text" class="form-control bg-dark text-light" name="billingZipcodeInput" id="billingZipcodeInput" placeholder="Zipcode" value="{{billing_info['zipcode']}}" required>
+                            </div>
+                            <button class="btn btn-dark btn-outline-light" type="submit" name="account_button" value="update_billing" id="update_billing">Update</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade text-light" id="delete-acc" role="tabpanel" aria-labelledby="delete-acc-tab">
+                        <form method="POST">
+                            <h4 class="mb-5">This action is not reversible!</h4>
+                            <button class="btn btn-dark btn-outline-light" type="submit" name="account_button" value="confirm_delete" id="confirm_delete">Confirm Delete Account</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Add space -->
         <div class="mb-5"></div>

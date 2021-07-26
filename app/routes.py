@@ -1,6 +1,5 @@
-from app import app
 from flask import render_template, redirect, session, request, url_for
-from app import mongodb, stocks
+from app import app, mongodb, stocks, user_account
 from app.portfolio import portfolio_v1
 
 test_stocks = {
@@ -70,11 +69,32 @@ def portfolio():
         return redirect(url_for('login'))
     return 'portfolio'
 
-@app.route('/account')
+@app.route('/account', methods=['GET', 'POST'])
 def account():
+    if request.method == 'POST':
+        confirm_button = request.form['account_button']
+        user_id = session['user_id']
+        if confirm_button == 'update_billing':
+            user_account.update_billing_info(user_id, request.form)
+            return redirect(url_for('account'))
+        elif confirm_button == 'confirm_delete':
+            mongodb.delete_user_by_id(user_id)
+            return redirect(url_for('logout'))
+        elif confirm_button == 'update_portfolio_settings':
+            user_account.update_portfolio_settings(user_id, request.form)
+            return redirect(url_for('account'))
+        elif confirm_button == 'update_account':
+            user_account.update_account(user_id, request.form)
+            return redirect(url_for('account'))
+
     if 'user_id' not in session or session['user_id'] == None:
         return redirect(url_for('login'))
-    return 'account'
+
+    user_id = session['user_id']
+    return render_template('account.html', session=session,
+                            email=mongodb.get_email(user_id),
+                            billing_info=user_account.get_billing_info(user_id),
+                            portfolio_settings=user_account.get_portfolio_settings(user_id))
 
 @app.route('/pricing')
 def pricing():

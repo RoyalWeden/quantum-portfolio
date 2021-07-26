@@ -4,8 +4,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <link rel="apple-touch-icon" sizes="180x180" href="{{url_for('static', filename='favicon/apple-touch-icon.png')}}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{url_for('static', filename='favicon/favicon-32x32.png')}}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{url_for('static', filename='favicon/favicon-16x16.png')}}">
+        <link rel="manifest" href="{{url_for('static', filename='favicon/site.webmanifest')}}">
+
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/general.css')}}">
 
         <title>About | Quantum Portfolio</title>
     </head>
@@ -42,19 +47,19 @@
         </nav>
     
         <!-- Add space -->
-        <div class="mb-4"></div>
+        <div class="mb-5"></div>
 
         <div class="container-md text-light mb-3">
             <h1>Quantum Portfolio</h1>
-            <p class="mb-5">
+            <p class="mb-5" style="margin: 0 3% 0 3%;">
                 Many people are interested in stocks and trading all around the world like myself. I wanted to create a simple way for people to be able to manage a portfolio for stocks that they want while also gaining the largest profit.
             </p>
             <h2>Why Quantum?</h2>
-            <p class="mb-5">
+            <p class="mb-5" style="margin: 0 3% 0 3%;">
                 Through the latest research in quantum computing, researchers have been trying to find areas where there are possible advantages from quantum computing versus classical computing. I believe that as more research is done, better and faster algorithms in quantum will be able to leverage a wide range of financial applications, such as portfolio optimization in this project.
             </p>
             <h2>How to use this</h2>
-            <p class="mb-5">
+            <p class="mb-5" style="margin: 0 3% 0 3%;">
                 To start your own quantum portfolio, simply sign up and account, select the stocks you would like your portfolio to optimize to, and wait for your quantum portfolio to be generated. Based on your subscription plan, you can choose from a wider range of stocks, have more portfolios generated, and have your portfolio be updated more regularly.
             </p>
         </div>
