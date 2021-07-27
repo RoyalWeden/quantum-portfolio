@@ -71,7 +71,9 @@ def portfolio():
         portfolio_v1.create_add_portfolio(session['user_id'])
         return redirect(url_for('portfolio'))
 
-    return render_template('portfolio.html', session=session, portfolios=mongodb.get_portfolios(session['user_id']))
+    return render_template('portfolio.html', session=session,
+                            portfolios=mongodb.get_portfolios(session['user_id']),
+                            portfolio_settings=mongodb.get_portfolio_settings(session['user_id']))
 
 @app.route('/account', methods=['GET', 'POST'])
 def account():

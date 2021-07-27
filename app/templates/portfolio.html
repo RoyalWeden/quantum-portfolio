@@ -49,7 +49,7 @@
         <!-- Add space -->
         <div class="mb-4"></div>
 
-        {% if (portfolios|length > 0 and portfolios[0]['status'] != 'pending') or portfolios|length == 0 %}
+        {% if portfolio_settings['stocks']|length >= 2 and ((portfolios|length > 0 and portfolios[0]['status'] != 'pending') or portfolios|length == 0) %}
         <div class="row">
             <form method="POST">
                 <button type="submit" name="generate_portfolio" id="generate_portfolio" class="form-control btn-dark border border-1">Generate Portfolio</button>
