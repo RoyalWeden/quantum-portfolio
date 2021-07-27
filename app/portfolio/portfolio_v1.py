@@ -27,7 +27,7 @@ from qiskit_optimization.algorithms.minimum_eigen_optimizer import MinimumEigenO
 
 import quandl
 
-from app import config, stocks
+from app import config, mongodb, stocks
 
 quandl.ApiConfig.api_key = config['QUANDL_API_TOKEN']
     
@@ -62,23 +62,34 @@ def generate_portfolio(user_id):
     add_portfolio(user_id, result)
 
 def get_user_portfolio_settings(user_id):
-    return ['AAPL','MSFT','AMZN','PYPL'], 2
+    portfolio_settings = mongodb.get_portfolio_settings(user_id)
+    return portfolio_settings['stocks'], portfolio_settings['optimize_count']
 
 def add_portfolio(user_id, result):
     which_stocks = get_user_portfolio_settings(user_id)[0]
+    possible_stocks = list(which_stocks)
     for i in range(len(which_stocks) - 1, -1, -1):
         if result.x[i] == 0:
             which_stocks.pop(i)
     portfolio_json = {
-        stocks.get_date(): {
-            'chosen_stocks': which_stocks,
-            'optimal_value': result.x,
-            'optimal_function_value': result.fval
-        }
+        'date': stocks.get_date(),
+        'status': 'complete',
+        'chosen_stocks': which_stocks,
+        'possible_stocks': possible_stocks,
+        'optimal_value': list(result.x),
+        'optimal_function_value': result.fval
     }
-    print(portfolio_json)
+    mongodb.add_optimized_portfolio(user_id, opt_portfolio=portfolio_json)
+    # print(portfolio_json)
 
 def create_add_portfolio(user_id):
+    possible_stocks = get_user_portfolio_settings(user_id)[0]
+    portfolio_json = {
+        'date': stocks.get_date(),
+        'status': 'pending',
+        'possible_stocks': possible_stocks,
+    }
+    mongodb.add_optimized_portfolio(user_id, pending_portfolio=portfolio_json)
     p = Process(target=generate_portfolio, args=(user_id,))
     p.start()
 

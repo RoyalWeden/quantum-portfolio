@@ -31,6 +31,7 @@ def update_portfolio_settings(id, form):
             selected_stocks.pop(i)
     new_settings = {
         'stocks': selected_stocks,
+        'optimize_count': len(selected_stocks) // 2,
         'auto_generate_rate': form['generateRateInput'],
         'last_generated_date': portfolio_settings['last_generated_date'],
         'next_generate_date': portfolio_settings['next_generate_date']

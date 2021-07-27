@@ -62,12 +62,16 @@ def logout():
 def about():
     return render_template('about.html', session=session)
 
-@app.route('/portfolio', methods=['GET'])
+@app.route('/portfolio', methods=['GET', 'POST'])
 def portfolio():
-    portfolio_v1.create_add_portfolio('verver')
     if 'user_id' not in session or session['user_id'] == None:
         return redirect(url_for('login'))
-    return 'portfolio'
+
+    if request.method == 'POST':
+        portfolio_v1.create_add_portfolio(session['user_id'])
+        return redirect(url_for('portfolio'))
+
+    return render_template('portfolio.html', session=session, portfolios=mongodb.get_portfolios(session['user_id']))
 
 @app.route('/account', methods=['GET', 'POST'])
 def account():

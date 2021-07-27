@@ -26,6 +26,7 @@ def add_user(email, password, subscription):
         },
         'portfolio_settings': {
             'stocks': [],
+            'optimize_count': 0,
             'auto_generate_rate': 'manual',
             'last_generated_date': '',
             'next_generate_date': ''
@@ -88,6 +89,20 @@ def set_account(id, new_account):
     found_user['email'] = new_account['email']
     found_user['password'] = pass_encrypt(new_account['password'])
     users.update_one(q, {'$set': found_user})
+
+def add_optimized_portfolio(id, opt_portfolio=None, pending_portfolio=None):
+    q = {'_id': ObjectId(id)}
+    found_user = get_user_by_id(id)
+    if opt_portfolio:
+        found_user['portfolios'].pop(0)
+        found_user['portfolios'].insert(0, opt_portfolio)
+    elif pending_portfolio:
+        found_user['portfolios'].insert(0, pending_portfolio)
+    users.update_one(q, {'$set': found_user})
+
+def get_portfolios(id):
+    found_user = get_user_by_id(id)
+    return found_user['portfolios']
 
 def get_email(id):
     return get_user_by_id(id)['email']
