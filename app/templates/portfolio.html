@@ -49,7 +49,7 @@
         <!-- Add space -->
         <div class="mb-4"></div>
 
-        {% if portfolio_settings['stocks']|length >= 2 and ((portfolios|length > 0 and portfolios[0]['status'] != 'pending') or portfolios|length == 0) %}
+        {% if portfolio_settings['stocks']|length >= 2 and ((portfolios|length > 0 and portfolios[0]['status'] != 'PENDING') or portfolios|length == 0) %}
         <div class="row">
             <form method="POST">
                 <button type="submit" name="generate_portfolio" id="generate_portfolio" class="form-control btn-dark border border-1">Generate Portfolio</button>
@@ -73,7 +73,7 @@
                 <div class="card bg-dark border-light">
                     <div class="card-header text-light">{{ ptfo['status'] }}</div>
                     <div class="card-body text-light">
-                        {% if ptfo['status'] == 'complete' %}
+                        {% if ptfo['status'] == 'COMPLETE' %}
                         <h3 class="card-title text-light mb-4">
                             {% for stock in ptfo['chosen_stocks'] %}
                             {{ stock }} 
@@ -87,7 +87,7 @@
                         </p>
                     </div>
                     <small class="card-footer text-muted">
-                        {{ ptfo['date'] }}
+                        {{ ptfo['date'] }}<br />Time Elapsed: {{ ptfo['format_time_elapsed'] }}
                     </small>
                 </div>
             </div>

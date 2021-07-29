@@ -28,6 +28,7 @@ from qiskit_optimization.algorithms.minimum_eigen_optimizer import MinimumEigenO
 import quandl
 
 from app import config, mongodb, stocks
+import time
 
 quandl.ApiConfig.api_key = config['QUANDL_API_TOKEN']
     
@@ -71,14 +72,12 @@ def add_portfolio(user_id, result):
     for i in range(len(which_stocks) - 1, -1, -1):
         if result.x[i] == 0:
             which_stocks.pop(i)
-    portfolio_json = {
-        'date': stocks.get_date(),
-        'status': 'complete',
-        'chosen_stocks': which_stocks,
-        'possible_stocks': possible_stocks,
-        'optimal_value': list(result.x),
-        'optimal_function_value': result.fval
-    }
+    found_user = mongodb.get_user_by_id(user_id)
+    portfolio_json = found_user['portfolios'][0]
+    portfolio_json['status'] = 'COMPLETE'
+    portfolio_json['chosen_stocks'] = which_stocks
+    portfolio_json['optimal_value'] = list(result.x)
+    portfolio_json['optimal_function_value'] = result.fval
     mongodb.add_optimized_portfolio(user_id, opt_portfolio=portfolio_json)
     # print(portfolio_json)
 
@@ -86,12 +85,31 @@ def create_add_portfolio(user_id):
     possible_stocks = get_user_portfolio_settings(user_id)[0]
     portfolio_json = {
         'date': stocks.get_date(),
-        'status': 'pending',
+        'status': 'PENDING',
+        'time_elapsed': 0,
+        'format_time_elapsed': '00:00:00',
         'possible_stocks': possible_stocks,
     }
     mongodb.add_optimized_portfolio(user_id, pending_portfolio=portfolio_json)
+    time_p = Process(target=elapse_portfolio_gen, args=(user_id,))
+    time_p.start()
     p = Process(target=generate_portfolio, args=(user_id,))
     p.start()
 
 
-# print(f'selected: {new_port.x}, value: {new_port.fval}')
+def elapse_portfolio_gen(user_id):
+    while mongodb.get_portfolios(user_id) == None:
+        pass
+    portfolio_json = mongodb.get_portfolios(user_id)[0]
+    while portfolio_json['status'] == 'PENDING':
+        portfolio_json = mongodb.get_portfolios(user_id)[0]
+        portfolio_json['time_elapsed'] += 1
+        hours = str(portfolio_json['time_elapsed'] // 3600)
+        hours_str = ('0' + hours) if len(hours) == 1 else hours
+        minutes = str(portfolio_json['time_elapsed'] // 60)
+        minutes_str = ('0' + minutes) if len(minutes) == 1 else minutes
+        seconds = str(portfolio_json['time_elapsed'] % 60)
+        seconds_str = ('0' + seconds) if len(seconds) == 1 else seconds
+        portfolio_json['format_time_elapsed'] = f'{hours_str}:{minutes_str}:{seconds_str}'
+        mongodb.elapse_portfolio_time(user_id, portfolio_json)
+        time.sleep(1)

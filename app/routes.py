@@ -1,5 +1,5 @@
 from flask import render_template, redirect, session, request, url_for
-from app import app, mongodb, stocks, user_account
+from app import app, mongodb, stocks, user_account, qpemail
 from app.portfolio import portfolio_v1
 
 test_stocks = {
@@ -22,34 +22,46 @@ def home():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    if 'user_id' in session and session['user_id'] != None:
+        return redirect(url_for('account'))
+
     error = ''
+    msg = ''
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
         subscription = request.form['subscription']
         if mongodb.check_user(email):
             error = 'Please try a different email. This email is already in use.'
-            return render_template('signup.html', session=session, error=error)
+            return render_template('signup.html', session=session, error=error, msg=msg)
         else:
             new_user = mongodb.add_user(email, password, subscription)
-            session['user_id'] = new_user
-            return redirect('/')
-    return render_template('signup.html', session=session)
+            qpemail.verify_code_email(mongodb.get_user_by_id(new_user))
+            msg = 'A verification code and url have been sent to your email to complete signing up your account.'
+            return render_template('signup.html', session=session, error=error, msg=msg)
+    return render_template('signup.html', session=session, error=error, msg=msg)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if 'user_id' in session and session['user_id'] != None:
+        return redirect(url_for('account'))
+        
     error = ''
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
         found_user = mongodb.check_user(email, password)
         if found_user:
-            session['user_id'] = found_user
-            return redirect('/')
+            if mongodb.is_verified_user(found_user):
+                session['user_id'] = found_user
+                return redirect(url_for('account'))
+            else:
+                error = 'This account is not yet verified.'
+                return render_template('login.html', session=session, error=error)
         else:
             error = 'Email or password is incorrect. Please try again.'
             return render_template('login.html', session=session, error=error)
-    return render_template('login.html', session=session)
+    return render_template('login.html', session=session, error=error)
 
 @app.route('/logout')
 def logout():
@@ -64,7 +76,8 @@ def about():
 
 @app.route('/portfolio', methods=['GET', 'POST'])
 def portfolio():
-    if 'user_id' not in session or session['user_id'] == None:
+    if 'user_id' not in session or session['user_id'] == None or \
+        ('user_id' in session and not mongodb.is_verified_user(session['user_id'])):
         return redirect(url_for('login'))
 
     if request.method == 'POST':
@@ -77,6 +90,10 @@ def portfolio():
 
 @app.route('/account', methods=['GET', 'POST'])
 def account():
+    if 'user_id' not in session or session['user_id'] == None or \
+        ('user_id' in session and not mongodb.is_verified_user(session['user_id'])):
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
         confirm_button = request.form['account_button']
         user_id = session['user_id']
@@ -93,9 +110,6 @@ def account():
             user_account.update_account(user_id, request.form)
             return redirect(url_for('account'))
 
-    if 'user_id' not in session or session['user_id'] == None:
-        return redirect(url_for('login'))
-
     user_id = session['user_id']
     return render_template('account.html', session=session,
                             email=mongodb.get_email(user_id),
@@ -105,3 +119,23 @@ def account():
 @app.route('/pricing')
 def pricing():
     return render_template('pricing.html', session=session)
+
+@app.route('/verify', methods=['GET', 'POST'])
+def verify():
+    if 'user_id' in session and session['user_id'] != None:
+        return redirect(url_for('account'))
+
+    error = ''
+    if 'a' not in request.args or 'b' not in request.args:
+        error = 'This is not a valid verification link.'
+        render_template('verify.html', session=session, error=error)
+    else:
+        if request.method == 'POST':
+            is_verified = mongodb.check_verify_code(request.args['b'], request.args['a'], request.form['codeVerifyInput'])
+            if is_verified:
+                return redirect(url_for('login'))
+            else:
+                error = 'Incorrect validation code.'
+                render_template('verify.html', session=session, error=error)
+    
+        return render_template('verify.html', session=session, error=error)
